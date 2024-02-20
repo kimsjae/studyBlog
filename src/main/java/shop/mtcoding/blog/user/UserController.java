@@ -3,6 +3,7 @@ package shop.mtcoding.blog.user;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,10 @@ public class UserController {
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO joinDTO) {
 
+        String rawPassword = joinDTO.getPassword();
+        String encPassword = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
+        joinDTO.setPassword(encPassword);
+
         try {
             userRepository.save(joinDTO); // 모델에 위임하기
         } catch (Exception e) {
@@ -31,10 +36,13 @@ public class UserController {
     public String login(UserRequest.LoginDTO loginDTO) {
 
         if (loginDTO.getUsername().length() < 3) { // 유효성 검사
-            return "error/400";
+            throw new RuntimeException("유저네임 길이가 너무 짧아요");
         }
 
-        User user = userRepository.findByUsernameAndPassword(loginDTO);
+        User user = userRepository.findByUsername(loginDTO.getUsername());
+        if (!BCrypt.checkpw(loginDTO.getPassword(), user.getPassword())) {
+            throw new RuntimeException("패스워드가 틀렸습니다");
+        }
         session.setAttribute("sessionUser", user); // 세션에 담는다
 
 
