@@ -12,6 +12,7 @@ public class User {
     @Id // PRIMARY KEY
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO_INCREMENT
     private int id;
+    @Column(unique = true)
     private String username;
     private String password;
     private String email;
