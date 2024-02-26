@@ -22,14 +22,14 @@
 
     <!--좋아요 부분-->
     <div>
-        {{#isLove}}
+        {{#love.isLove}}
             <i class="fas fa-heart text-danger"></i>
-        {{/isLove}}
-        {{^isLove}}
+        {{/love.isLove}}
+        {{^love.isLove}}
             <i class="far fa-heart"></i>
-        {{/isLove}}
+        {{/love.isLove}}
 
-        <span>{{loveCount}}</span>
+        <span>{{love.loveCount}}</span>
 
     </div>
 
