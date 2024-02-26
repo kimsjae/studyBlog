@@ -35,6 +35,9 @@ public class BoardController {
 
         request.setAttribute("board", detailDTO);
 
+        request.setAttribute("isLove", true);
+        request.setAttribute("loveCount", 2);
+
         return "board/detail";
     }
 }
