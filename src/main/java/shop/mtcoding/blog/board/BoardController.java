@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import shop.mtcoding.blog.love.LoveRepository;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardRepository boardRepository;
+    private final LoveRepository loveRepository;
 
     @GetMapping({ "/", "/board" })
     public String index(HttpServletRequest request) {
@@ -35,7 +37,7 @@ public class BoardController {
 
         request.setAttribute("board", detailDTO);
 
-        request.setAttribute("isLove", true);
+        request.setAttribute("isLove", false);
         request.setAttribute("loveCount", 2);
 
         return "board/detail";
