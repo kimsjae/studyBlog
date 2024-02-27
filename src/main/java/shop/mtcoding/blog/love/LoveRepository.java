@@ -6,12 +6,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.blog.board.Board;
+import shop.mtcoding.blog.board.BoardRequest;
+import shop.mtcoding.blog.board.BoardResponse;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
 public class LoveRepository {
     private final EntityManager em;
-
 
     public Love findById(int id) {
         Query query = em.createNativeQuery("select * from love_tb where id = ?", Love.class);
@@ -32,13 +35,7 @@ public class LoveRepository {
 
 
 
-
-
-
-
-
-
-    public LoveResponse.DetailDTO findLove(int boardId){
+    public LoveResponse.DetailDTO findLove(int boardId) {
         String q = """
                 SELECT count(*) loveCount
                 FROM love_tb
@@ -47,15 +44,14 @@ public class LoveRepository {
         Query query = em.createNativeQuery(q);
         query.setParameter(1, boardId);
 
-        // 한 건만 받을 때는 바로 받기
-
+        // 한건만 받을때는 바로 받기
         Long loveCount = (Long) query.getSingleResult();
         Integer id = 0;
         Boolean isLove = false;
 
-        System.out.println("id : "+id);
-        System.out.println("isLove : "+isLove);
-        System.out.println("loveCount : "+loveCount);
+        System.out.println("id : " + id);
+        System.out.println("isLove : " + isLove);
+        System.out.println("loveCount : " + loveCount);
 
         LoveResponse.DetailDTO responseDTO = new LoveResponse.DetailDTO(
                 id, isLove, loveCount
@@ -107,4 +103,16 @@ public class LoveRepository {
         return responseDTO;
     }
 
+    @Transactional
+    public int save(LoveRequest.SaveDTO requestDTO, int sessionUserId) {
+        Query query = em.createNativeQuery("insert into love_tb(board_id, user_id, created_at) values(?,?, now())");
+        query.setParameter(1, requestDTO.getBoardId());
+        query.setParameter(2, sessionUserId);
+
+        query.executeUpdate();
+
+        Query q = em.createNativeQuery("select max(id) from love_tb");
+        Integer loveId = (Integer) q.getSingleResult();
+        return loveId;
+    }
 }
