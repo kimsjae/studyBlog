@@ -61,7 +61,7 @@
                     $("#loveCount").text(Number(loveCount) + 1);
 
                     // 좋아요가 되면 love id를 변경해야함
-                    $("#love-id").val(res.body);
+                    $("#love-id").val(res.body.id);
                 }).fail((res) => {
                     alert(res.responseJSON.msg);
                 });
