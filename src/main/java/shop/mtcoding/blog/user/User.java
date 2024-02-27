@@ -16,4 +16,5 @@ public class User {
     private String password;
     private String email;
     private LocalDateTime createdAt; // 카멜표기법으로 만들면 DB는 언더스코어기법으로 만들어진다.
+
 }
