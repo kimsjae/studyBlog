@@ -16,6 +16,30 @@ import java.util.List;
 public class LoveRepository {
     private final EntityManager em;
 
+    public LoveResponse.DetailDTO findLove(int boardId){
+        String q = """
+                select count(*) loveCount from love_tb where board_id = ?;
+                """;
+        Query query = em.createNativeQuery(q);
+        query.setParameter(1, boardId);
+
+        Object[] row = (Object[]) query.getSingleResult();
+        Long loveCount = (Long) row[0];
+        Integer id = 0;
+        Boolean isLove = false;
+
+
+        System.out.println("id : "+id);
+        System.out.println("isLove : "+isLove);
+        System.out.println("loveCount : "+loveCount);
+
+        LoveResponse.DetailDTO responseDTO = new LoveResponse.DetailDTO(
+                id, isLove, loveCount
+        );
+        return responseDTO;
+    }
+
+
     public LoveResponse.DetailDTO findLove(int boardId, int sessionUserId){
         String q = """
                 SELECT

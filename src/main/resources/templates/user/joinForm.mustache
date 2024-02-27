@@ -8,53 +8,52 @@
     <div class="card">
         <div class="card-header"><b>회원가입을 해주세요</b></div>
         <div class="card-body">
-            <form action="/join" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return valid()">
+            <form action="/join" method="post" onsubmit="return valid()">
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Enter username" id="username">
-                    <div>
-                        <button type="button" onclick="check()">ID 중복 체크</button>
-                    </div>
+                    <input id="username" type="text" class="form-control" placeholder="Enter username" name="username">
+                    <button type="button" onclick="usernameSameCheck()" class="btn btn-warning">아이디중복체크</button>
                 </div>
 
                 <div class="mb-3">
-                    <input type="password" class="form-control" placeholder="Enter password" id="password">
+                    <input type="password" class="form-control" placeholder="Enter password" name="password">
                 </div>
                 <div class="mb-3">
-                    <input type="email" class="form-control" placeholder="Enter email" id="email">
+                    <input type="email" class="form-control" placeholder="Enter email" name="email">
                 </div>
-                <button class="btn btn-primary form-control">회원가입</button>
+                <button type="submit" class="btn btn-primary form-control">회원가입</button>
             </form>
         </div>
     </div>
 </div>
 
 <script>
-    let isCheck = false;
+    let isSameCheck = false;
 
-    function check() {
-        let username = $(`#username`).val();
+    function valid(){
+        if(isSameCheck == false){
+            alert("아이디 중복체크를 해야 합니다");
+        }
+        return isSameCheck;
+    }
+
+    function usernameSameCheck(){
+        let username = $("#username").val();
 
         $.ajax({
             url: "/api/username-same-check?username="+username,
-            type: "get",
+            type: "get"
         }).done((res)=>{
-            if (res.body === true) {
-                isCheck = true;
-                alert("사용 가능한 ID입니다.");
-            } else {
-                isCheck = false;
-                alert("이미 사용중인 ID입니다.");
+            console.log(res);
+            if(res.body == true){
+                isSameCheck = true;
+                alert("아이디 중복 체크 완료");
+            }else{
+                isSameCheck = false;
+                alert("동일한 아이디가 존재합니다");
             }
         }).fail((res)=>{
             alert(res.responseJSON.msg);
         });
-    }
-
-    function valid() {
-        if (isCheck == false) {
-            alert("ID 중복 체크를 해주세요.");
-        }
-        return isCheck;
     }
 </script>
 
